@@ -1,0 +1,17 @@
+# Python / Virtualenv
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Banco de Dados Local & Testes
+*.db
+*.sqlite3
+.coverage
+.pytest_cache/
+
+# IDEs e Sistema
+.vscode/
+.idea/
+.DS_Store
