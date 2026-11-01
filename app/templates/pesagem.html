@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReciclaLafaiete - Registro de Pesagem</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+            --primary-color: #1b4d3e;
+            --primary-hover: #12352b;
+            --text-color: #212529;
+            --border-color: #495057;
+            --focus-ring: #0056b3;
+            --success-bg: #d4edda;
+            --success-color: #155724;
+            --success-border: #c3e6cb;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.4rem;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 1.5rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+        }
+
+        nav a:focus, nav a:hover {
+            background-color: var(--primary-hover);
+            outline: 2px solid #ffffff;
+        }
+
+        main {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--bg-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .alert-success {
+            background-color: var(--success-bg);
+            color: var(--success-color);
+            border: 1px solid var(--success-border);
+            padding: 0.85rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        select, input[type="number"] {
+            padding: 0.75rem;
+            font-size: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            min-height: 48px; /* RNF04: área útil >= 44px */
+        }
+
+        select:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: var(--focus-ring);
+            box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.25);
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .category-option {
+            position: relative;
+        }
+
+        .category-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .category-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.85rem;
+            background-color: #e9ecef;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            min-height: 48px;
+            text-align: center;
+        }
+
+        .category-option input[type="radio"]:checked + .category-label {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border-color: var(--primary-color);
+        }
+
+        .category-option input[type="radio"]:focus + .category-label {
+            outline: 3px solid var(--focus-ring);
+        }
+
+        .btn-submit {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            padding: 0.85rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            min-height: 48px;
+            margin-top: 1rem;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-submit:focus {
+            outline: 3px solid var(--focus-ring);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>ReciclaLafaiete</h1>
+        <nav aria-label="Navegação Principal">
+            <a href="/pesagem" aria-current="page">Pesagem</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/login">Sair</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="card">
+            <h2>Registro de Pesagem</h2>
+
+            <!-- Banner visual de feedback de sucesso (RF01) -->
+            <div class="alert-success" role="status">
+                <span>✓</span> Pesagem de 142.50 kg (Plástico PET) salva com sucesso!
+            </div>
+
+            <form action="/dashboard" method="GET">
+                <!-- RF03: Consulta e Seleção de Rota -->
+                <div class="form-group">
+                    <label for="rota">Rota de Coleta / Origem</label>
+                    <select id="rota" name="rota" required>
+                        <option value="">-- Selecione a Rota --</option>
+                        <option value="rota-01">Rota 01 - Bairro São João / Manhã</option>
+                        <option value="rota-02" selected>Rota 02 - Centro / Turno Manhã</option>
+                        <option value="rota-03">Rota 03 - Bairro Queluz / Tarde</option>
+                    </select>
+                </div>
+
+                <!-- Categoria de Material -->
+                <div class="form-group">
+                    <label>Categoria do Material</label>
+                    <div class="category-grid">
+                        <div class="category-option">
+                            <input type="radio" id="cat-papelao" name="categoria" value="Papelão">
+                            <label for="cat-papelao" class="category-label">Papelão</label>
+                        </div>
+                        <div class="category-option">
+                            <input type="radio" id="cat-pet" name="categoria" value="Plástico PET" checked>
+                            <label for="cat-pet" class="category-label">Plástico PET</label>
+                        </div>
+                        <div class="category-option">
+                            <input type="radio" id="cat-aluminio" name="categoria" value="Alumínio">
+                            <label for="cat-aluminio" class="category-label">Alumínio</label>
+                        </div>
+                        <div class="category-option">
+                            <input type="radio" id="cat-vidro" name="categoria" value="Vidro">
+                            <label for="cat-vidro" class="category-label">Vidro</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RF01 / RNF02: Campo de Peso -->
+                <div class="form-group">
+                    <label for="peso">Peso Registrado (kg)</label>
+                    <input type="number" id="peso" name="peso" step="0.01" min="0.1" required placeholder="0.00" value="142.50">
+                </div>
+
+                <button type="submit" class="btn-submit">Salvar Pesagem</button>
+            </form>
+        </div>
+    </main>
+
+</body>
+</html>
