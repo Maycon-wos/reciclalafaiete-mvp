@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReciclaLafaiete - Dashboard e Indicadores</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+            --primary-color: #1b4d3e;
+            --primary-hover: #12352b;
+            --text-color: #212529;
+            --border-color: #495057;
+            --focus-ring: #0056b3;
+            --accent-color: #2e7d32;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.4rem;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 1.5rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+        }
+
+        nav a:focus, nav a:hover {
+            background-color: var(--primary-hover);
+            outline: 2px solid #ffffff;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--accent-color);
+        }
+
+        .kpi-title {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .kpi-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--bg-color);
+            padding-bottom: 0.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 0.85rem;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        th {
+            background-color: #e9ecef;
+            color: var(--text-color);
+            font-weight: bold;
+        }
+
+        .btn-action {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-top: 1.5rem;
+            min-height: 48px;
+            line-height: normal;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .btn-action:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-action:focus {
+            outline: 3px solid var(--focus-ring);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>ReciclaLafaiete</h1>
+        <nav aria-label="Navegação Principal">
+            <a href="/pesagem">Pesagem</a>
+            <a href="/dashboard" aria-current="page">Dashboard</a>
+            <a href="/login">Sair</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Cards de Indicadores de Desempenho (KPIs) -->
+        <div class="dashboard-grid">
+            <div class="kpi-card">
+                <div class="kpi-title">Total Reciclado (Mês)</div>
+                <div class="kpi-value">1,420.50 kg</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Rotas Atendidas</div>
+                <div class="kpi-value">12 Rotas</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Meta ODS 12.5</div>
+                <div class="kpi-value">88% Atingida</div>
+            </div>
+        </div>
+
+        <!-- Tabela de Consolidação de Estoque -->
+        <div class="card">
+            <h2>Resumo de Estoque por Categoria</h2>
+            <table aria-label="Tabela de Estoque por Categoria de Material">
+                <thead>
+                    <tr>
+                        <th>Categoria de Material</th>
+                        <th>Volume Acumulado (kg)</th>
+                        <th>Status de Armazenagem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Plástico PET</td>
+                        <td>540.00 kg</td>
+                        <td>Adequado</td>
+                    </tr>
+                    <tr>
+                        <td>Papelão</td>
+                        <td>480.50 kg</td>
+                        <td>Alto Giro</td>
+                    </tr>
+                    <tr>
+                        <td>Alumínio</td>
+                        <td>250.00 kg</td>
+                        <td>Estável</td>
+                    </tr>
+                    <tr>
+                        <td>Vidro</td>
+                        <td>150.00 kg</td>
+                        <td>Normal</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <a href="/pesagem" class="btn-action">Registrar Nova Pesagem</a>
+        </div>
+    </main>
+
+</body>
+</html>
