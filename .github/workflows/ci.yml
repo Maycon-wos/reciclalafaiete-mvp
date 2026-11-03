@@ -26,4 +26,4 @@ jobs:
 
     - name: Executar testes automatizados com cobertura
       run: |
-        python -m pytest -o pythonpath=. --cov=app --cov-report=term-missing
+        python -m pytest tests/ -o pythonpath=. --cov=app --cov-report=term-missing
