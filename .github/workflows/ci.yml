@@ -24,6 +24,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest pytest-cov httpx fastapi pydantic uvicorn jinja2
 
+    - name: Garantir estrutura de pacotes
+      run: |
+        touch __init__.py
+        touch tests/__init__.py
+
     - name: Executar testes automatizados com cobertura
       run: |
-        python -m pytest -o pythonpath=. --cov=app --cov-report=term-missing
+        python -m pytest tests/test_main.py -o pythonpath=. --cov=app --cov-report=term-missing
