@@ -1,8 +1,10 @@
 from pathlib import Path
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, status
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+
+from app.schemas.pesagem import PesagemCreate
 
 app = FastAPI(
     title="ReciclaLafaiete API",
@@ -25,6 +27,16 @@ async def read_login(request: Request):
 async def read_pesagem(request: Request):
     """Serve a Tela 2: Registro de Pesagem e Vinculação de Rotas."""
     return templates.TemplateResponse(request=request, name="pesagem.html")
+
+
+@app.post("/api/pesagem", status_code=status.HTTP_201_CREATED)
+async def criar_pesagem(dados: PesagemCreate):
+    """Regista uma nova pesagem validada via Pydantic para a ASMARCOL."""
+    # Aqui simulamos o processamento e salvamento dos dados no MVP
+    return {
+        "mensagem": "Pesagem registada com sucesso!",
+        "dados_recebidos": dados.model_dump(),
+    }
 
 
 @app.get("/dashboard", response_class=HTMLResponse)
