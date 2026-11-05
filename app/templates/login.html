@@ -171,20 +171,19 @@
     <main class="login-card">
         <h1>ReciclaLafaiete</h1>
         <p class="subtitle">ASMARCOL - Gestão de Coleta Seletiva</p>
+            <form action="/login" method="POST">
+                <div class="form-group">
+                    <label for="usuario">Usuário</label>
+                    <input type="text" id="usuario" name="usuario" required autocomplete="username" placeholder="Ex: operador.asmarcol" value="operador.asmarcol">
+                </div>
 
-        <form action="/pesagem" method="GET">
-            <div class="form-group">
-                <label for="username">Usuário</label>
-                <input type="text" id="username" name="username" required autocomplete="username" placeholder="Ex: operador.asmarcol" value="operador.asmarcol">
-            </div>
+                <div class="form-group">
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" name="senha" required autocomplete="current-password" placeholder="••••••••" value="asmarcol2026">
+                </div>
 
-            <div class="form-group">
-                <label for="password">Senha</label>
-                <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="••••••••" value="senha123">
-            </div>
-
-            <button type="submit" class="btn-submit">Entrar no Sistema</button>
-        </form>
+                <button type="submit" class="btn-submit">Entrar no Sistema</button>
+            </form>
     </main>
 
     <script>

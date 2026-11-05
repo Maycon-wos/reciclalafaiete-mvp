@@ -38,7 +38,7 @@ class PesagemModel(Base):
 Base.metadata.create_all(bind=engine)
 
 
-# Função para popular automaticamente a tabela de rotas com base na tabela oficial da ASMARCOL
+# Função para popular automaticamente a tabela de rotas com a tabela oficial da ASMARCOL
 def popular_rotas_iniciais():
     db = SessionLocal()
     if db.query(RotaModel).count() == 0:
@@ -135,14 +135,29 @@ async def read_login(request: Request):
     return templates.TemplateResponse(request=request, name="login.html")
 
 
-@app.post("/login")
-async def login_action(usuario: str = Form(...), senha: str = Form(...)):
-    return RedirectResponse(url="/pesagem", status_code=status.HTTP_303_SEE_OTHER)
+@app.post("/login", response_class=HTMLResponse)
+async def login_action(
+    request: Request, usuario: str = Form(...), senha: str = Form(...)
+):
+    """Valida as credenciais fixas do operador e gerencia o acesso."""
+    # Credenciais padrão definidas para o operador do MVP
+    USUARIO_CORRETO = "operador.asmarcol"
+    SENHA_CORRETA = "asmarcol2026"
+
+    if usuario == USUARIO_CORRETO and senha == SENHA_CORRETA:
+        # Se as credenciais estiverem corretas, redireciona para a pesagem
+        return RedirectResponse(url="/pesagem", status_code=status.HTTP_303_SEE_OTHER)
+
+    # Se falhar, recarrega a tela de login enviando uma mensagem de erro
+    return templates.TemplateResponse(
+        request=request,
+        name="login.html",
+        context={"erro": "Usuário ou senha incorretos. Tente novamente."},
+    )
 
 
 @app.get("/pesagem", response_class=HTMLResponse)
 async def read_pesagem(request: Request, db: Session = Depends(get_db)):
-    """Busca todas as rotas/bairros reais cadastrados no banco para exibir no select."""
     rotas = db.query(RotaModel).all()
     return templates.TemplateResponse(
         request=request, name="pesagem.html", context={"rotas": rotas}
