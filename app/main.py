@@ -188,14 +188,12 @@ async def criar_pesagem_form(
 @app.post("/api/pesagem", status_code=status.HTTP_201_CREATED)
 async def criar_pesagem_api(dados: PesagemCreate, db: Session = Depends(get_db)):
     nova_pesagem = PesagemModel(
-        rota=dados.rota, categoria=dados.categoria, peso=dados.peso
+        rota=dados.rota, categoria=dados.material, peso=dados.peso_kg
     )
     db.add(nova_pesagem)
     db.commit()
-    return {
-        "mensagem": "Pesagem registada com sucesso!",
-        "dados_recebidos": dados.model_dump(),
-    }
+    db.refresh(nova_pesagem)
+    return {"mensagem": "Pesagem registada com sucesso!", "id": nova_pesagem.id}
 
 
 @app.get("/dashboard", response_class=HTMLResponse)
