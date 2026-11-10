@@ -1,7 +1,17 @@
-from app.main import app
+import pytest
 from fastapi.testclient import TestClient
 
+from app.database import Base, engine
+from app.main import app
+
 client = TestClient(app)
+
+
+@pytest.fixture(autouse=True)
+def setup_database():
+    Base.metadata.create_all(bind=engine)
+    yield
+    Base.metadata.drop_all(bind=engine)
 
 
 def test_read_root_e_login():
