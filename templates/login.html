@@ -15,6 +15,7 @@
             --focus-ring: #0056b3;
             --error-color: #b00020;
             --error-bg: #fde8e8;
+            --error-border: #f5c6cb;
         }
 
         body {
@@ -49,6 +50,19 @@
             color: #555;
             font-size: 0.95rem;
             margin-bottom: 2rem;
+        }
+
+        .alert-error {
+            background-color: var(--error-bg);
+            color: var(--error-color);
+            border: 1px solid var(--error-border);
+            padding: 0.85rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            font-weight: bold;
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .form-group {
@@ -126,13 +140,17 @@
             color: #ffffff !important;
             border: 2px solid #ffff00 !important;
         }
+        body.high-contrast .alert-error {
+            background-color: #721c24 !important;
+            color: #ffffff !important;
+            border: 1px solid #ffff00 !important;
+        }
         body.high-contrast .btn-submit {
             background-color: #ffff00 !important;
             color: #000000 !important;
             border: 2px solid #ffffff !important;
         }
 
-        /* Botão Flutuante de Acessibilidade */
         .accessibility-bar {
             position: fixed;
             top: 15px;
@@ -171,19 +189,22 @@
     <main class="login-card">
         <h1>ReciclaLafaiete</h1>
         <p class="subtitle">ASMARCOL - Gestão de Coleta Seletiva</p>
-            <form action="/login" method="POST">
-                <div class="form-group">
-                    <label for="usuario">Usuário</label>
-                    <input type="text" id="usuario" name="usuario" required autocomplete="username" placeholder="Ex: operador.asmarcol" value="operador.asmarcol">
-                </div>
 
-                <div class="form-group">
-                    <label for="senha">Senha</label>
-                    <input type="password" id="senha" name="senha" required autocomplete="current-password" placeholder="••••••••" value="asmarcol2026">
-                </div>
+        <div id="alert-error" class="alert-error" role="alert">
+            <span>⚠️</span> <span id="error-msg">Usuário ou senha incorretos.</span>
+        </div>
 
-                <button type="submit" class="btn-submit">Entrar no Sistema</button>
-            </form>
+        <form id="form-login">
+            <div class="form-group">
+                <label for="usuario">Usuário:</label>
+                <input type="text" id="usuario" name="usuario" required autocomplete="off" value="operador.teste">
+            </div>
+            <div class="form-group">
+                <label for="senha">Senha:</label>
+                <input type="password" id="senha" name="senha" required value="senha123">
+            </div>
+            <button type="submit" class="btn-submit">Entrar</button>
+        </form>
     </main>
 
     <script>
@@ -206,6 +227,47 @@
                 document.body.classList.add('high-contrast');
                 const btn = document.getElementById('btn-contraste');
                 if (btn) btn.innerText = "👁️ Desativar Contraste";
+            }
+        });
+
+        document.getElementById('form-login').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const alertError = document.getElementById('alert-error');
+            const errorMsg = document.getElementById('error-msg');
+            alertError.style.display = 'none';
+
+            // Pega diretamente os valores dos inputs pelo ID
+            const usuarioVal = document.getElementById('usuario').value.trim();
+            const senhaVal = document.getElementById('senha').value.trim();
+
+            const payload = {
+                usuario: usuarioVal,
+                senha: senhaVal
+            };
+
+            console.log("Enviando payload para a API:", payload);
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    window.location.href = data.redirect || '/pesagem';
+                } else {
+                    const errorData = await response.json();
+                    errorMsg.innerText = errorData.detail || "Credenciais inválidas.";
+                    alertError.style.display = 'flex';
+                }
+            } catch (err) {
+                errorMsg.innerText = "Falha de conexão com o servidor.";
+                alertError.style.display = 'flex';
             }
         });
     </script>

@@ -52,6 +52,10 @@
             outline: 2px solid #ffffff;
         }
 
+        nav a[aria-current="page"] {
+            background-color: var(--primary-hover);
+        }
+
         main {
             max-width: 900px;
             margin: 2rem auto;
@@ -71,6 +75,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             border-left: 5px solid var(--accent-color);
+            position: relative;
         }
 
         .kpi-title {
@@ -86,11 +91,18 @@
             color: var(--primary-color);
         }
 
+        .kpi-sub {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
         .card {
             background-color: var(--card-bg);
             padding: 2rem;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
         }
 
         h2 {
@@ -99,6 +111,45 @@
             font-size: 1.5rem;
             border-bottom: 2px solid var(--bg-color);
             padding-bottom: 0.5rem;
+        }
+
+        .admin-box {
+            background-color: #e8f5e9;
+            border: 1px solid #c8e6c9;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .admin-box label {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .admin-box input[type="number"] {
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            width: 140px;
+        }
+
+        .btn-small {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.55rem 1rem;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-small:hover {
+            background-color: var(--primary-hover);
         }
 
         table {
@@ -138,12 +189,7 @@
             background-color: var(--primary-hover);
         }
 
-        .btn-action:focus {
-            outline: 3px solid var(--focus-ring);
-            outline-offset: 2px;
-        }
-
-        /* Estilos do Modo Alto Contraste */
+        /* Modo Alto Contraste */
         body.high-contrast {
             background-color: #000000 !important;
             color: #ffff00 !important;
@@ -153,13 +199,15 @@
             border-bottom: 2px solid #ffff00 !important;
         }
         body.high-contrast .card, 
-        body.high-contrast .kpi-card {
+        body.high-contrast .kpi-card,
+        body.high-contrast .admin-box {
             background-color: #121212 !important;
             color: #ffffff !important;
             border: 2px solid #ffff00 !important;
             box-shadow: none !important;
         }
-        body.high-contrast .kpi-title {
+        body.high-contrast .kpi-title,
+        body.high-contrast .admin-box label {
             color: #ffeb3b !important;
         }
         body.high-contrast .kpi-value {
@@ -174,22 +222,13 @@
             border-bottom: 1px solid #444444 !important;
             color: #ffffff !important;
         }
-        body.high-contrast table {
-            color: #ffffff !important;
-        }
-        body.high-contrast .btn-action {
+        body.high-contrast .btn-action,
+        body.high-contrast .btn-small {
             background-color: #ffff00 !important;
             color: #000000 !important;
             border: 2px solid #ffffff !important;
         }
 
-        /* Botão Flutuante de Acessibilidade */
-        .accessibility-bar {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            z-index: 9999;
-        }
         .btn-accessibility {
             background-color: var(--primary-color);
             color: #ffffff;
@@ -199,15 +238,6 @@
             cursor: pointer;
             font-size: 14px;
             font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-        .btn-accessibility:hover {
-            background-color: var(--primary-hover);
-        }
-        body.high-contrast .btn-accessibility {
-            background-color: #ffff00 !important;
-            color: #000000 !important;
-            border: 2px solid #000000 !important;
         }
     </style>
 </head>
@@ -216,8 +246,8 @@
 <header>
     <h1>ReciclaLafaiete</h1>
     <nav aria-label="Navegação Principal">
-        <a href="/pesagem" aria-current="page">Pesagem</a>
-        <a href="/dashboard">Dashboard</a>
+        <a href="/pesagem">Pesagem</a>
+        <a href="/dashboard" aria-current="page">Dashboard</a>
         <a href="/login">Sair</a>
         <button onclick="toggleHighContrast()" id="btn-contraste" class="btn-accessibility">
             👁️ Alto Contraste
@@ -226,54 +256,81 @@
 </header>
 
     <main>
+        <!-- Painel ADM para alterar Meta -->
+        <div class="admin-box">
+            <label for="nova-meta">⚙️ Configuração ADM - Meta ODS 12.5 (kg):</label>
+            <input type="number" id="nova-meta" step="100" value="{{ meta_kg }}">
+            <button onclick="salvarMeta()" class="btn-small">Salvar Nova Meta</button>
+        </div>
+
         <!-- Cards de Indicadores de Desempenho (KPIs) -->
         <div class="dashboard-grid">
             <div class="kpi-card">
-                <div class="kpi-title">Total Reciclado (Mês)</div>
-                <div class="kpi-value">1,420.50 kg</div>
+                <div class="kpi-title">Total Reciclado (Acumulado)</div>
+                <div class="kpi-value">
+                    {% if peso_total is defined and peso_total is not none %}
+                        {{ "%.2f"|format(peso_total) }} kg
+                    {% else %}
+                        0.00 kg
+                    {% endif %}
+                </div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-title">Rotas Atendidas</div>
-                <div class="kpi-value">12 Rotas</div>
+                <div class="kpi-title">Total de Registros</div>
+                <div class="kpi-value">
+                    {% if pesagens %}
+                        {{ pesagens|length }} Lançamentos
+                    {% else %}
+                        0 Lançamentos
+                    {% endif %}
+                </div>
             </div>
             <div class="kpi-card">
                 <div class="kpi-title">Meta ODS 12.5</div>
-                <div class="kpi-value">88% Atingida</div>
+                <div class="kpi-value">{{ porcentagem_meta }}% Atingida</div>
+                <div class="kpi-sub">Meta Vigente: {{ "%.0f"|format(meta_kg) }} kg</div>
             </div>
         </div>
 
-        <!-- Tabela de Consolidação de Estoque -->
+        <!-- Tabela de Histórico de Pesagens -->
         <div class="card">
-            <h2>Resumo de Estoque por Categoria</h2>
-            <table aria-label="Tabela de Estoque por Categoria de Material">
+            <h2>Últimas Pesagens Registradas</h2>
+            <table aria-label="Tabela de Pesagens Registradas">
                 <thead>
                     <tr>
-                        <th>Categoria de Material</th>
-                        <th>Volume Acumulado (kg)</th>
-                        <th>Status de Armazenagem</th>
+                        <th>ID</th>
+                        <th>Operador</th>
+                        <th>Rota / Bairro</th>
+                        <th>Categoria</th>
+                        <th>Peso (kg)</th>
+                        <th>Data de Registro</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Plástico PET</td>
-                        <td>540.00 kg</td>
-                        <td>Adequado</td>
-                    </tr>
-                    <tr>
-                        <td>Papelão</td>
-                        <td>480.50 kg</td>
-                        <td>Alto Giro</td>
-                    </tr>
-                    <tr>
-                        <td>Alumínio</td>
-                        <td>250.00 kg</td>
-                        <td>Estável</td>
-                    </tr>
-                    <tr>
-                        <td>Vidro</td>
-                        <td>150.00 kg</td>
-                        <td>Normal</td>
-                    </tr>
+                    {% if pesagens %}
+                        {% for p in pesagens %}
+                        <tr>
+                            <td>{{ p.id }}</td>
+                            <td>{{ p.operador }}</td>
+                            <td>{{ p.rota }}</td>
+                            <td>{{ p.categoria }}</td>
+                            <td>{{ "%.2f"|format(p.peso) }} kg</td>
+                            <td>
+                                {% if p.data_criacao %}
+                                    {{ p.data_criacao.strftime('%d/%m/%Y %H:%M') }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: #777;">
+                                Nenhuma pesagem registrada até o momento.
+                            </td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
 
@@ -303,6 +360,31 @@
                 if (btn) btn.innerText = "👁️ Desativar Contraste";
             }
         });
+
+        async function salvarMeta() {
+            const novaMeta = parseFloat(document.getElementById('nova-meta').value);
+            if (!novaMeta || novaMeta <= 0) {
+                alert("Por favor, informe um valor válido para a meta.");
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/meta', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ meta_kg: novaMeta })
+                });
+
+                if (response.ok) {
+                    alert("Meta atualizada com sucesso!");
+                    window.location.reload();
+                } else {
+                    alert("Erro ao atualizar a meta.");
+                }
+            } catch (err) {
+                alert("Falha de conexão ao atualizar a meta.");
+            }
+        }
     </script>
 </body>
 </html>

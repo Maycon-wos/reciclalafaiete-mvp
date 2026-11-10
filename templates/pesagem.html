@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReciclaLafaiete - Registro de Pesagem</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+            --primary-color: #1b4d3e;
+            --primary-hover: #12352b;
+            --text-color: #212529;
+            --border-color: #495057;
+            --focus-ring: #0056b3;
+            --success-bg: #d4edda;
+            --success-color: #155724;
+            --success-border: #c3e6cb;
+            --error-bg: #f8d7da;
+            --error-color: #721c24;
+            --error-border: #f5c6cb;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.4rem;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 1.5rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+        }
+
+        nav a:focus, nav a:hover {
+            background-color: var(--primary-hover);
+            outline: 2px solid #ffffff;
+        }
+
+        main {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--bg-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .alert-success {
+            background-color: var(--success-bg);
+            color: var(--success-color);
+            border: 1px solid var(--success-border);
+            padding: 0.85rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            font-weight: bold;
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .alert-error {
+            background-color: var(--error-bg);
+            color: var(--error-color);
+            border: 1px solid var(--error-border);
+            padding: 0.85rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            font-weight: bold;
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        select, input[type="number"], input[type="text"] {
+            padding: 0.75rem;
+            font-size: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            min-height: 48px;
+        }
+
+        select:focus, input[type="number"]:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--focus-ring);
+            box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.25);
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .category-option {
+            position: relative;
+        }
+
+        .category-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .category-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.85rem;
+            background-color: #e9ecef;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            min-height: 48px;
+            text-align: center;
+            color: #212529;
+        }
+
+        .category-option input[type="radio"]:checked + .category-label {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border-color: var(--primary-color);
+        }
+
+        .category-option input[type="radio"]:focus + .category-label {
+            outline: 3px solid var(--focus-ring);
+        }
+
+        .btn-submit {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            padding: 0.85rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            min-height: 48px;
+            margin-top: 1rem;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-submit:focus {
+            outline: 3px solid var(--focus-ring);
+            outline-offset: 2px;
+        }
+
+        /* Estilos do Modo Alto Contraste */
+        body.high-contrast {
+            background-color: #000000 !important;
+            color: #ffff00 !important;
+        }
+        body.high-contrast header {
+            background-color: #121212 !important;
+            border-bottom: 2px solid #ffff00 !important;
+        }
+        body.high-contrast .card {
+            background-color: #121212 !important;
+            color: #ffffff !important;
+            border: 2px solid #ffff00 !important;
+            box-shadow: none !important;
+        }
+        body.high-contrast h2 {
+            color: #ffff00 !important;
+            border-bottom: 2px solid #ffff00 !important;
+        }
+        body.high-contrast label {
+            color: #ffffff !important;
+        }
+        body.high-contrast select, 
+        body.high-contrast input[type="number"],
+        body.high-contrast input[type="text"] {
+            background-color: #000000 !important;
+            color: #ffffff !important;
+            border: 2px solid #ffff00 !important;
+        }
+        body.high-contrast .category-label {
+            background-color: #222222 !important;
+            color: #ffffff !important;
+            border: 2px solid #ffff00 !important;
+        }
+        body.high-contrast .category-option input[type="radio"]:checked + .category-label {
+            background-color: #ffff00 !important;
+            color: #000000 !important;
+            border-color: #ffffff !important;
+        }
+        body.high-contrast .alert-success {
+            background-color: #1b4d3e !important;
+            color: #ffff00 !important;
+            border: 1px solid #ffff00 !important;
+        }
+        body.high-contrast .alert-error {
+            background-color: #721c24 !important;
+            color: #ffffff !important;
+            border: 1px solid #ffff00 !important;
+        }
+        body.high-contrast .btn-submit {
+            background-color: #ffff00 !important;
+            color: #000000 !important;
+            border: 2px solid #ffffff !important;
+        }
+
+        .btn-accessibility {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        .btn-accessibility:hover {
+            background-color: var(--primary-hover);
+        }
+        body.high-contrast .btn-accessibility {
+            background-color: #ffff00 !important;
+            color: #000000 !important;
+            border: 2px solid #000000 !important;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>ReciclaLafaiete</h1>
+    <nav aria-label="Navegação Principal">
+        <a href="/pesagem" aria-current="page">Pesagem</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/login">Sair</a>
+        <button onclick="toggleHighContrast()" id="btn-contraste" class="btn-accessibility">
+            👁️ Alto Contraste
+        </button>
+    </nav>
+</header>
+
+    <main>
+        <div class="card">
+            <h2>Registro de Pesagem</h2>
+
+            <!-- Feedback de Sucesso -->
+            <div id="alert-success" class="alert-success" role="status">
+                <span>✓</span> <span id="success-msg">Pesagem registrada com sucesso!</span>
+            </div>
+
+            <!-- Feedback de Erro -->
+            <div id="alert-error" class="alert-error" role="alert">
+                <span>⚠️</span> <span id="error-msg">Erro ao registrar pesagem.</span>
+            </div>
+
+            <form id="form-pesagem">
+                <!-- Operador -->
+                <div class="form-group">
+                    <label for="operador">Operador:</label>
+                    <input type="text" id="operador" name="operador" value="{{ operador }}" readonly>
+                </div>
+
+                <!-- Consulta e Seleção de Rota -->
+                <div class="form-group">
+                    <label for="rota">Rota / Bairro</label>
+                    <select name="rota" id="rota" class="form-control" required>
+                        <option value="" disabled selected>-- Selecione a Rota / Bairro --</option>
+                        {% if rotas %}
+                            {% for r in rotas %}
+                                <option value="{{ r.bairro }}">
+                                    {{ r.bairro }} | {{ r.dia_semana }} - {{ r.turno }} [{{ r.associacao }}]
+                                </option>
+                            {% endfor %}
+                        {% else %}
+                            <option value="Rota Centro">Rota Centro</option>
+                            <option value="Rota Barreira">Rota Barreira</option>
+                            <option value="Rota Santanense">Rota Santanense</option>
+                        {% endif %}
+                    </select>
+                </div>
+
+                <!-- Categoria de Material -->
+                <div class="form-group">
+                    <label>Categoria do Material</label>
+                    <div class="category-grid">
+                        <div class="category-option">
+                            <input type="radio" id="cat-papelao" name="categoria" value="Papelão">
+                            <label for="cat-papelao" class="category-label">Papelão</label>
+                        </div>
+                        <div class="category-option">
+                            <input type="radio" id="cat-pet" name="categoria" value="PET" checked>
+                            <label for="cat-pet" class="category-label">PET</label>
+                        </div>
+                        <div class="category-option">
+                            <input type="radio" id="cat-aluminio" name="categoria" value="Alumínio">
+                            <label for="cat-aluminio" class="category-label">Alumínio</label>
+                        </div>
+                        <div class="category-option">
+                            <input type="radio" id="cat-vidro" name="categoria" value="Vidro">
+                            <label for="cat-vidro" class="category-label">Vidro</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Campo de Peso -->
+                <div class="form-group">
+                    <label for="peso">Peso Registrado (kg)</label>
+                    <input type="number" id="peso" name="peso" step="0.01" min="0.1" required placeholder="0.00">
+                </div>
+
+                <button type="submit" class="btn-submit">Salvar Pesagem</button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        function toggleHighContrast() {
+            const body = document.body;
+            body.classList.toggle('high-contrast');
+            
+            const btn = document.getElementById('btn-contraste');
+            if (body.classList.contains('high-contrast')) {
+                btn.innerText = "👁️ Desativar Contraste";
+                localStorage.setItem('accessibility_mode', 'high-contrast');
+            } else {
+                btn.innerText = "👁️ Alto Contraste";
+                localStorage.setItem('accessibility_mode', 'normal');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('accessibility_mode') === 'high-contrast') {
+                document.body.classList.add('high-contrast');
+                const btn = document.getElementById('btn-contraste');
+                if (btn) btn.innerText = "👁️ Desativar Contraste";
+            }
+        });
+
+        document.getElementById('form-pesagem').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const alertSuccess = document.getElementById('alert-success');
+            const alertError = document.getElementById('alert-error');
+            const successMsg = document.getElementById('success-msg');
+            const errorMsg = document.getElementById('error-msg');
+
+            alertSuccess.style.display = 'none';
+            alertError.style.display = 'none';
+
+            const materialSelecionado = document.querySelector('input[name="categoria"]:checked')?.value || "PET";
+
+            const payload = {
+                operador: document.getElementById('operador').value,
+                rota: document.getElementById('rota').value,
+                peso_kg: parseFloat(document.getElementById('peso').value),
+                material: materialSelecionado
+            };
+
+            try {
+                const response = await fetch('/api/pesagem', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    successMsg.innerText = `Pesagem de ${payload.peso_kg.toFixed(2)} kg (${payload.material}) salva com sucesso!`;
+                    alertSuccess.style.display = 'flex';
+                    document.getElementById('peso').value = '';
+                } else {
+                    const errorData = await response.json();
+                    errorMsg.innerText = errorData.detail || "Erro ao salvar a pesagem. Verifique os dados.";
+                    alertError.style.display = 'flex';
+                }
+            } catch (err) {
+                errorMsg.innerText = "Falha na conexão com o servidor.";
+                alertError.style.display = 'flex';
+            }
+        });
+    </script>
+</body>
+</html>
